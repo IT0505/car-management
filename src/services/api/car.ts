@@ -1,0 +1,21 @@
+import http from '../http';
+import { Axis, BaseResponse, Car } from '../type';
+import { API_URL } from './urls';
+
+export const CarApi = {
+  getAll: async function (): Promise<BaseResponse<Car[]>> {
+    return await http.get(API_URL.carGetAll);
+  },
+  delete: async function (id: number): Promise<BaseResponse<string>> {
+    return await http.post(API_URL.carDelete, id);
+  },
+  add: async function (car: Car): Promise<BaseResponse<Car>> {
+    return await http.post(API_URL.carAdd, car);
+  },
+  edit: async function (car: Car): Promise<BaseResponse<Car>> {
+    return await http.post(API_URL.carEdit, car);
+  },
+  getNearby: async function (axis: Axis): Promise<BaseResponse<Car[]>> {
+    return await http.get(API_URL.carGetNearby, { params: { ...axis } });
+  },
+};
