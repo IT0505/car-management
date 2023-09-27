@@ -7,7 +7,7 @@ Dự án quản lý xe ô tô với một số tính năng quản lý cơ bản:
 - Thêm
 - Xóa
 - Sửa
-- Tìm kiếm
+- Tìm kiếm từ gần đến xa theo tọa độ và số lượng
 
 ### Công nghệ sử dụng
 
