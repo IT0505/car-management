@@ -24,3 +24,9 @@ export type Axis = {
 export type FindNearbyParams = {
   n: number;
 } & Axis;
+
+export type NearbyCar = {
+  id: number;
+  licensePlate: string;
+  distance: number;
+};

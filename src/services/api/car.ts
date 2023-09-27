@@ -1,5 +1,5 @@
 import http from '../http';
-import { Axis, BaseResponse, Car } from '../type';
+import { Axis, BaseResponse, Car, NearbyCar } from '../type';
 import { API_URL } from './urls';
 
 export const CarApi = {
@@ -15,7 +15,7 @@ export const CarApi = {
   edit: async function (car: Car): Promise<BaseResponse<Car>> {
     return await http.put(API_URL.carEdit, car);
   },
-  getNearby: async function (axis: Axis): Promise<BaseResponse<Car[]>> {
+  getNearby: async function (axis: Axis): Promise<BaseResponse<NearbyCar[]>> {
     return await http.get(API_URL.carGetNearby, { params: { ...axis } });
   },
 };

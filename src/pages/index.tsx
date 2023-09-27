@@ -7,6 +7,7 @@ import {
   BaseErrorResponse,
   Car,
   FindNearbyParams,
+  NearbyCar,
 } from '@/services/type';
 import AddEditCarModal from '@/components/home/AddEditCarModal';
 import { CarApi } from '@/services/api/car';
@@ -19,6 +20,8 @@ export default function Home() {
   const [cars, setCars] = useState<Car[]>([]);
   const [selectedCar, setSelectedCar] = useState<Car>();
   const { showNotification } = useContext(NotificationContext);
+
+  const [nearbyCars, setNearbyCars] = useState<NearbyCar[]>();
 
   const columns: ColumnsType<Car> = [
     {
@@ -93,6 +96,25 @@ export default function Home() {
     },
   ];
 
+  const columnsNearby: ColumnsType<NearbyCar> = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: 'License Plate',
+      dataIndex: 'licensePlate',
+      key: 'licensePlate',
+    },
+    {
+      title: 'Distance',
+      dataIndex: 'distance',
+      key: 'distance',
+    },
+  ];
+
   const handleDelete = async (id: number) => {
     try {
       const res = await CarApi.delete(id);
@@ -147,7 +169,7 @@ export default function Home() {
         });
       } else {
         const res = await CarApi.getNearby(axisInputs);
-        setCars(res.resource);
+        setNearbyCars(res.resource);
         showNotification({
           message: 'Find Nearby Success',
           description: res.message,
@@ -208,7 +230,14 @@ export default function Home() {
           <Button onClick={() => handleFindNearby()}>Find Nearby</Button>
         </div>
 
-        <Button onClick={() => getData()}>Reload</Button>
+        <Button
+          onClick={() => {
+            getData();
+            setNearbyCars(undefined);
+          }}
+        >
+          Reload
+        </Button>
       </div>
       <Table
         columns={columns}
@@ -218,6 +247,15 @@ export default function Home() {
         className='w-full'
         scroll={{ x: 680 }}
       />
+      {nearbyCars && nearbyCars.length && (
+        <Table
+          columns={columnsNearby}
+          dataSource={nearbyCars}
+          bordered
+          rowKey={'id'}
+          pagination={false}
+        />
+      )}
       <AddEditCarModal
         isOpen={isModalOpen}
         onClose={closeModal}
