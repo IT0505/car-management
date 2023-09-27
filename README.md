@@ -27,7 +27,7 @@ Dự án quản lý xe ô tô với một số tính năng quản lý cơ bản:
 
 1. Clone repo từ github
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/IT0505/car-management
    ```
 2. Cài đặt tất cả các packages cần thiết
    ```sh
