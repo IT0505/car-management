@@ -2,7 +2,12 @@ import { Inter } from 'next/font/google';
 import { Button, Popconfirm, Input, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
-import { BaseErrorResponse, Car } from '@/services/type';
+import {
+  Axis,
+  BaseErrorResponse,
+  Car,
+  FindNearbyParams,
+} from '@/services/type';
 import AddEditCarModal from '@/components/home/AddEditCarModal';
 import { CarApi } from '@/services/api/car';
 import { NotificationContext } from '@/contexts/NotificationContext';
@@ -101,9 +106,9 @@ export default function Home() {
     } catch (error) {
       console.log(error);
       showNotification({
-        message: 'Unknown error',
+        message: (error as BaseErrorResponse).errors.message,
         description: (error as BaseErrorResponse).errors.message,
-        type: 'success',
+        type: 'error',
       });
     }
   };
@@ -126,26 +131,35 @@ export default function Home() {
     getData();
   }, []);
 
-  const [axisInputs, setAxisInput] = useState({
+  const [axisInputs, setAxisInput] = useState<FindNearbyParams>({
+    n: 5,
     x: 0,
     y: 0,
   });
 
-  const handleFilter = async () => {
+  const handleFindNearby = async () => {
     try {
-      const res = await CarApi.getNearby(axisInputs);
-      setCars(res.resource);
-      showNotification({
-        message: 'Filter Success',
-        description: res.message,
-        type: 'success',
-      });
+      if (Number(axisInputs.n) < 1) {
+        showNotification({
+          message: 'N must be greater than 0',
+          description: 'N must be greater than 0',
+          type: 'error',
+        });
+      } else {
+        const res = await CarApi.getNearby(axisInputs);
+        setCars(res.resource);
+        showNotification({
+          message: 'Find Nearby Success',
+          description: res.message,
+          type: 'success',
+        });
+      }
     } catch (error) {
       console.log(error);
       showNotification({
-        message: 'Unknown error',
+        message: (error as BaseErrorResponse).errors.message,
         description: (error as BaseErrorResponse).errors.message,
-        type: 'success',
+        type: 'error',
       });
     }
   };
@@ -182,7 +196,16 @@ export default function Home() {
             className='mx-1'
             addonBefore='y'
           />
-          <Button onClick={() => handleFilter()}>Filter</Button>
+          <Input
+            name='n'
+            type='number'
+            value={axisInputs.n}
+            onChange={handleChange}
+            className='mx-1'
+            addonBefore='n'
+            min='0'
+          />
+          <Button onClick={() => handleFindNearby()}>Find Nearby</Button>
         </div>
 
         <Button onClick={() => getData()}>Reload</Button>

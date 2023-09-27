@@ -20,3 +20,7 @@ export type Axis = {
   x: number;
   y: number;
 };
+
+export type FindNearbyParams = {
+  n: number;
+} & Axis;

@@ -56,8 +56,8 @@ const AddEditCarModal = ({
     if (!inputValues.birthday) {
       errors.birthday = 'Birthday is required';
     } else {
-      if (getAge(inputValues.birthday) < 18) {
-        errors.birthday = 'At least 18 years old';
+      if (getAge(inputValues.birthday) < 15) {
+        errors.birthday = 'At least 15 years old';
       }
     }
     return errors;

@@ -9,7 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<BaseResponse<Car | string>>
 ) {
-  if (req.method === 'POST') {
+  if (req.method === 'DELETE') {
     const jsonData = await fsPromises.readFile(dataFilePath);
     const { cars, index }: CarJson = JSON.parse(jsonData.toString());
 

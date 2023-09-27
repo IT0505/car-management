@@ -14,20 +14,28 @@ const distance = (axis1: Axis, axis2: Axis) => {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<BaseResponse<Car[]>>
+  res: NextApiResponse<BaseResponse<Car[] | string>>
 ) {
   if (req.method === 'GET') {
     const jsonData = await fsPromises.readFile(dataFilePath);
     const { cars }: CarJson = JSON.parse(jsonData.toString());
+    const { x, y, n } = req.query;
+
+    if (Number(n) < 0) {
+      return res
+        .status(500)
+        .json({ message: 'N must be greater than 0', resource: '' });
+    }
 
     const _cars = cars.map((it) => {
       return {
         ...it,
-        //@ts-ignore
-        distance: distance({ ...it }, req.query),
+        distance: distance({ ...it }, { x: Number(x), y: Number(y) }),
       };
     });
-    var topValues = _cars.sort((a, b) => a.distance - b.distance).slice(0, 5);
+    var topValues = _cars
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, Number(n));
     console.log(topValues);
 
     return res.status(200).json({ message: 'Success', resource: topValues });
